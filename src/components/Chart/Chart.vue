@@ -1,6 +1,9 @@
 <template>
     <div class="chart">
-        <svg height="500" version="1.1" width="1200" xmlns="http://www.w3.org/2000/svg">
+        <svg height="500" version="1.1" width="1200" xmlns="http://www.w3.org/2000/svg"
+            @mousemove="handleMousemove"
+            @mouseleave="handleMouseleave"
+        >
             <desc>Created for Telegram contest</desc>
 
             <chart-grid
@@ -14,8 +17,19 @@
                 :line="line"
                 :dates="dates"
                 :max="maxValue"
+                :hoveredPos="hoverPosition"
+                :is-hovered="isChartHovered"
+
+                @pos-found="handlePosFound"
+            />
+
+            <chart-hover
+                v-if="isChartHovered"
+                :x="hoverPosition"
             />
         </svg>
+
+        {{ isChartHovered }}
 
         <chart-dates
             :dates="dates"
@@ -33,6 +47,7 @@ import ChartGrid from './ChartGrid/ChartGrid.vue';
 import ChartLine from './ChartLine/ChartLine.vue';
 import ChartDates from './ChartDates/ChartDates.vue';
 import ChartVisibilityController from './ChartVisibilityController/ChartVisibilityController.vue';
+import ChartHover from './ChartHover/ChartHover.vue';
 
 export default {
   props: {
@@ -47,11 +62,15 @@ export default {
     ChartLine,
     ChartDates,
     ChartVisibilityController,
+    ChartHover,
   },
 
   data() {
     return {
       dataFormatted: [],
+
+      isChartHovered: false,
+      hoverPosition: 0,
     };
   },
 
@@ -107,6 +126,19 @@ export default {
         .find(item => item.name === name);
 
       lineByName.visible = visible;
+    },
+    handleMousemove($event) {
+      if (!this.isChartHovered) {
+        this.isChartHovered = true;
+      }
+
+      this.hoverPosition = $event.offsetX;
+    },
+    handleMouseleave() {
+      this.isChartHovered = false;
+    },
+    handlePosFound(point) {
+      console.log(point);
     },
   },
 };

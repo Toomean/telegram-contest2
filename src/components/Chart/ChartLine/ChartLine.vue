@@ -11,10 +11,27 @@
                 :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
             ></path>
         </transition>
+        <transition name="line">
+          <g v-if="isHovered">
+            <circle
+              class="circle"
+              :cx="circleToShow[0]"
+              :cy="circleToShow[1]"
+              :style="{
+                fill: '#ffffff',
+                stroke: line.color,
+                strokeWidth: 3,
+              }"
+              r="5"
+            ></circle>
+          </g>
+        </transition>
     </g>
 </template>
 
 <script>
+import { chunk } from 'lodash';
+
 export default {
   props: {
     line: {
@@ -29,11 +46,20 @@ export default {
       type: Number,
       required: true,
     },
+    hoveredPos: {
+      type: Number,
+      default: 0,
+    },
+    isHovered: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
     return {
       height: 500,
+      circleToShow: [],
     };
   },
 
@@ -48,6 +74,25 @@ export default {
         ))
         .flat();
     },
+    circlePoints() {
+      return chunk(this.points, 2);
+    },
+    // circleToShow() {
+    //   return this.circlePoints
+    //     .find(point => this.hoveredPos >= point[0] - 3 && this.hoveredPos <= point[0] + 3);
+    // },
+  },
+
+  watch: {
+    hoveredPos(value) {
+      const posFound = this.circlePoints
+        .find(point => value >= point[0] - 3 && value <= point[0] + 3);
+
+      if (posFound) {
+        this.circleToShow = posFound;
+        this.$emit('pos-found', this.line.columns[posFound[0] / 10]);
+      }
+    },
   },
 };
 </script>
@@ -57,6 +102,11 @@ export default {
     fill: none;
 
     transition: d .25s;
+}
+.circle {
+  position: relative;
+  z-index: 100;
+  transition: cy .25s, cx .25s;
 }
 
 .line-enter-active, .line-leave-active {

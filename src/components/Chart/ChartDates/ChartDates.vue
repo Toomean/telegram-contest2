@@ -11,6 +11,8 @@
 
 <script>
 import { chunk } from 'lodash';
+
+// @@todo: remove moment from bundle
 import moment from 'moment';
 
 export default {
