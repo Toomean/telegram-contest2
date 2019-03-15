@@ -1,14 +1,16 @@
 <template>
     <g>
-        <path v-if="line.visible"
-            :class="['line', `${max}`]"
-            :style="{
-                fill: 'none',
-                strokeWidth: 3,
-                stroke: line.color,
-            }"
-            :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
-        ></path>
+        <transition name="line">
+            <path v-if="line.visible"
+                :class="['line']"
+                :style="{
+                    fill: 'none',
+                    strokeWidth: 3,
+                    stroke: line.color,
+                }"
+                :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
+            ></path>
+        </transition>
     </g>
 </template>
 
@@ -47,17 +49,28 @@ export default {
         .flat();
     },
   },
-
-  mounted() {
-    // console.log('line: ', this.line.columns);
-    // console.log('dates: ', this.dates);
-    // console.log('points: ', this.points);
-  },
 };
 </script>
 
 <style lang="scss" scoped>
 .line {
     fill: none;
+
+    transition: d .25s;
+}
+
+.line-enter-active, .line-leave-active {
+  transition: opacity .25s, transform .25s;
+}
+.line-enter, .line-leave-to{
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+.line-fade-enter-active, .line-fade-leave-active {
+  transition: opacity .25s;
+}
+.line-fade-enter, .line-fade-leave-to{
+  opacity: 0;
 }
 </style>

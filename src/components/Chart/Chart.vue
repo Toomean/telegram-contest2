@@ -17,6 +17,10 @@
             />
         </svg>
 
+        <chart-dates
+            :dates="dates"
+        />
+
         <chart-visibility-controller
             :lines="lines"
             @change-visibility="changeVisibility"
@@ -27,6 +31,7 @@
 <script>
 import ChartGrid from './ChartGrid/ChartGrid.vue';
 import ChartLine from './ChartLine/ChartLine.vue';
+import ChartDates from './ChartDates/ChartDates.vue';
 import ChartVisibilityController from './ChartVisibilityController/ChartVisibilityController.vue';
 
 export default {
@@ -40,6 +45,7 @@ export default {
   components: {
     ChartGrid,
     ChartLine,
+    ChartDates,
     ChartVisibilityController,
   },
 
@@ -70,12 +76,13 @@ export default {
     },
     dates() {
       return this.dataFormatted
-        .find(column => column.type === 'x')
-        .columns;
+        && this.dataFormatted
+          .find(column => column.type === 'x')
+          .columns;
     },
   },
 
-  mounted() {
+  created() {
     this.dataFormatted = this.chartData.columns
       .map((column) => {
         const columnId = column[0];
