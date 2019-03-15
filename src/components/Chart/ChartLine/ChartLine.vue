@@ -1,7 +1,7 @@
 <template>
     <g>
         <path v-if="line.visible"
-            :class="['line']"
+            :class="['line', `${max}`]"
             :style="{
                 fill: 'none',
                 strokeWidth: 3,
@@ -32,11 +32,13 @@ export default {
   data() {
     return {
       height: 500,
-      heightRatio: 500 / this.max * 0.9,
     };
   },
 
   computed: {
+    heightRatio() {
+      return 500 / this.max * 0.9;
+    },
     points() {
       return this.dates
         .map((date, index) => (
