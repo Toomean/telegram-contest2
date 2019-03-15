@@ -1,6 +1,6 @@
 <template>
-    <g v-if="line.visible">
-        <path
+    <g>
+        <path v-if="line.visible"
             :class="['line']"
             :style="{
                 fill: 'none',

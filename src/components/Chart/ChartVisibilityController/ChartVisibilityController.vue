@@ -27,7 +27,7 @@ export default {
 
   methods: {
     changeVisibility(line) {
-      this.$emit('change-visibility', line.name);
+      this.$emit('change-visibility', { name: line.name, visible: !line.visible });
     },
   },
 };

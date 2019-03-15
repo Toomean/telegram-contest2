@@ -52,16 +52,21 @@ export default {
   computed: {
     maxValue() {
       return Math.round(
-        Math.max(...this.linesColumns.flat()) / 100,
+        Math.max(...this.visibleLinesColumns.flat()) / 100,
       ) * 100;
     },
     lines() {
       return this.dataFormatted
         .filter(column => column.type === 'line');
     },
-    linesColumns() {
+    visibleLinesColumns() {
       return this.lines
+        .filter(line => line.visible)
         .map(line => line.columns);
+    },
+    linesVisible() {
+      return this.dataFormatted
+        .filter(item => item.type === 'line' && item.visible);
     },
     dates() {
       return this.dataFormatted
@@ -86,11 +91,15 @@ export default {
   },
 
   methods: {
-    changeVisibility(lineName) {
-      const lineByName = this.dataFormatted
-        .find(item => item.name === lineName);
+    changeVisibility({ name, visible }) {
+      if (this.linesVisible.length === 1 && visible === false) {
+        return;
+      }
 
-      lineByName.visible = !lineByName.visible;
+      const lineByName = this.dataFormatted
+        .find(item => item.name === name);
+
+      lineByName.visible = visible;
     },
   },
 };
