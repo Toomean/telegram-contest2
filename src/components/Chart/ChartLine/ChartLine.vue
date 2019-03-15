@@ -8,9 +8,7 @@
                 stroke: this.line.color,
             }"
             :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
-        >
-
-        </path>
+        ></path>
     </g>
 </template>
 
@@ -51,7 +49,7 @@ export default {
   mounted() {
     // console.log('line: ', this.line.columns);
     // console.log('dates: ', this.dates);
-    console.log('points: ', this.points);
+    // console.log('points: ', this.points);
   },
 };
 </script>

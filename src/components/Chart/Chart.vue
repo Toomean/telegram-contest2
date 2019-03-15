@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="chart">
         <svg height="500" version="1.1" width="1200" xmlns="http://www.w3.org/2000/svg">
             <desc>Created for Telegram contest</desc>
 
@@ -16,12 +16,18 @@
                 :max="maxValue"
             />
         </svg>
+
+        <chart-visibility-controller
+            :lines="lines"
+            @change-visibility="changeVisibility"
+        />
     </div>
 </template>
 
 <script>
 import ChartGrid from './ChartGrid/ChartGrid.vue';
 import ChartLine from './ChartLine/ChartLine.vue';
+import ChartVisibilityController from './ChartVisibilityController/ChartVisibilityController.vue';
 
 export default {
   props: {
@@ -34,22 +40,16 @@ export default {
   components: {
     ChartGrid,
     ChartLine,
+    ChartVisibilityController,
+  },
+
+  data() {
+    return {
+      dataFormatted: [],
+    };
   },
 
   computed: {
-    dataFormatted() {
-      return this.chartData.columns
-        .map((column) => {
-          const columnId = column[0];
-
-          return {
-            name: this.chartData.names[columnId] || null,
-            type: this.chartData.types[columnId] || null,
-            color: this.chartData.colors[columnId] || null,
-            columns: column.slice(1),
-          };
-        });
-    },
     maxValue() {
       return Math.round(
         Math.max(...this.linesColumns.flat()) / 100,
@@ -69,9 +69,32 @@ export default {
         .columns;
     },
   },
+
+  mounted() {
+    this.dataFormatted = this.chartData.columns
+      .map((column) => {
+        const columnId = column[0];
+
+        return {
+          name: this.chartData.names[columnId] || null,
+          type: this.chartData.types[columnId] || null,
+          color: this.chartData.colors[columnId] || null,
+          columns: column.slice(1),
+        };
+      });
+  },
+
+  methods: {
+    changeVisibility(lineName) {
+      console.log(lineName);
+    },
+  },
 };
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.chart {
+    display: inline-flex;
+    flex-direction: column;
+}
 </style>
