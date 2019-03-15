@@ -1,6 +1,7 @@
 <template>
     <div class="visibility-controllers">
         <div class="visibility-controllers__item"
+            :class="{ 'visibility-controllers__item--visible': line.visible }"
             v-for="(line, index) in lines"
             :key="`line-controller-${ index }`"
             @click="changeVisibility(line)"
@@ -8,7 +9,7 @@
             <div class="visibility-controllers__icon"
                 :style="{ backgroundColor: line.color }"
             >
-                <font-awesome-icon icon="check" />
+                <font-awesome-icon v-if="line.visible" icon="check" />
             </div>
             <div class="visibility-controllers__text">{{ line.name }}</div>
         </div>
@@ -34,6 +35,8 @@ export default {
 
 <style lang="scss" scoped>
 .visibility-controllers {
+    $bl: '.visibility-controllers';
+
     display: flex;
     margin: 2em 0;
 

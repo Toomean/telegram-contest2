@@ -79,6 +79,7 @@ export default {
           name: this.chartData.names[columnId] || null,
           type: this.chartData.types[columnId] || null,
           color: this.chartData.colors[columnId] || null,
+          visible: true,
           columns: column.slice(1),
         };
       });
@@ -86,7 +87,10 @@ export default {
 
   methods: {
     changeVisibility(lineName) {
-      console.log(lineName);
+      const lineByName = this.dataFormatted
+        .find(item => item.name === lineName);
+
+      lineByName.visible = !lineByName.visible;
     },
   },
 };

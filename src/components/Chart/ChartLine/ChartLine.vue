@@ -1,11 +1,11 @@
 <template>
-    <g>
+    <g v-if="line.visible">
         <path
             :class="['line']"
             :style="{
                 fill: 'none',
                 strokeWidth: 3,
-                stroke: this.line.color,
+                stroke: line.color,
             }"
             :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
         ></path>
