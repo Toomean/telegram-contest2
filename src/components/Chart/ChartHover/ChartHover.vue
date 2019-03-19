@@ -51,9 +51,6 @@ export default {
           && this.xAxis.columns;
     },
   },
-  mounted() {
-    console.log(this.xAxisColumns);
-  },
   methods: {
     onLineMouseOver(index) {
       this.hoveredIndex = index;

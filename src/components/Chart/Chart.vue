@@ -31,6 +31,11 @@
             />
         </svg>
 
+        <chart-tooltip
+          :pos-left="hoverPosition * yScale"
+          :tooltip-data="tooltipData"
+        />
+
         <chart-dates
             :dates="dates"
         />
@@ -43,11 +48,14 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 import ChartGrid from './ChartGrid/ChartGrid.vue';
 import ChartLine from './ChartLine/ChartLine.vue';
 import ChartDates from './ChartDates/ChartDates.vue';
 import ChartVisibilityController from './ChartVisibilityController/ChartVisibilityController.vue';
 import ChartHover from './ChartHover/ChartHover.vue';
+import ChartTooltip from './ChartTooltip/ChartTooltip.vue';
 
 export default {
   props: {
@@ -63,6 +71,7 @@ export default {
     ChartDates,
     ChartVisibilityController,
     ChartHover,
+    ChartTooltip,
   },
 
   data() {
@@ -106,6 +115,24 @@ export default {
     },
     yScale() {
       return Math.floor(this.layoutWidth / this.xAxis.columns.length);
+    },
+    tooltipData() {
+      const dataObj = {
+        pos: this.hoverPosition,
+        date: moment(this.xAxis.columns[this.hoverPosition]).format('ddd, MMM DD'),
+        items: this.linesVisible
+          .map((line) => {
+            const linePoints = line.columns[this.hoverPosition];
+
+            return {
+              color: line.color,
+              name: line.name,
+              value: linePoints,
+            };
+          }),
+      };
+
+      return dataObj;
     },
   },
 
@@ -152,6 +179,8 @@ export default {
 
 <style lang="scss" scoped>
 .chart {
+    position: relative;
+
     display: inline-flex;
     flex-direction: column;
 }
