@@ -12,7 +12,7 @@
             ></path>
         </transition>
         <transition name="line">
-          <g v-if="isHovered">
+          <g v-if="line.visible && isHovered">
             <circle
               class="circle"
               :cx="circleToShow[0]"
