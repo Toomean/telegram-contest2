@@ -54,6 +54,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    yScale: {
+      type: Number,
+      required: true,
+    },
   },
 
   data() {
@@ -70,7 +74,7 @@ export default {
     points() {
       return this.dates
         .map((date, index) => (
-          [index * 10, this.height - this.line.columns[index] * this.heightRatio]
+          [index * this.yScale, this.height - this.line.columns[index] * this.heightRatio]
         ))
         .flat();
     },

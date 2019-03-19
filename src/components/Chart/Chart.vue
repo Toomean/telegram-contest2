@@ -1,6 +1,7 @@
 <template>
     <div class="chart">
-        <svg height="500" version="1.1" width="1200" xmlns="http://www.w3.org/2000/svg"
+      y scale: {{ yScale }}
+        <svg height="500" version="1.1" :width="layoutWidth" xmlns="http://www.w3.org/2000/svg"
             @mousemove="handleMousemove"
             @mouseleave="handleMouseleave"
         >
@@ -17,13 +18,15 @@
                 :line="line"
                 :dates="dates"
                 :max="maxValue"
-                :hoveredPos="hoverPosition"
+                :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
+                :y-scale="yScale"
             />
 
             <chart-hover
                 :x="hoverPosition"
-                :xAxis="xAxis"
+                :x-axis="xAxis"
+                :y-scale="yScale"
                 @x-hover="onXHover"
             />
         </svg>
@@ -64,6 +67,7 @@ export default {
 
   data() {
     return {
+      layoutWidth: 1200,
       dataFormatted: [],
 
       isChartHovered: false,
@@ -100,6 +104,9 @@ export default {
           .find(column => column.type === 'x')
           .columns;
     },
+    yScale() {
+      return Math.floor(this.layoutWidth / this.xAxis.columns.length);
+    },
   },
 
   created() {
@@ -128,12 +135,10 @@ export default {
 
       lineByName.visible = visible;
     },
-    handleMousemove($event) {
+    handleMousemove() {
       if (!this.isChartHovered) {
         this.isChartHovered = true;
       }
-
-      // this.hoverPosition = $event.offsetX;
     },
     onXHover(xPosition) {
       this.hoverPosition = xPosition;

@@ -7,13 +7,13 @@
             :style="{
                 stroke: '#ccc',
                 strokeWidth: 0.25,
-                transform: 'translate(' + hoveredIndex * 10 + 'px, 0)',
+                transform: 'translate(' + hoveredIndex * yScale + 'px, 0)',
             }"
         />
         <line
             v-for="(column, index) in xAxisColumns"
             :key="`x-axis-line-${ index }`"
-            :x1="index * 10" :x2="index * 10"
+            :x1="index * yScale" :x2="index * yScale"
             y1="9%" y2="99%"
             :style="{
                 stroke: 'transparent',
@@ -33,6 +33,10 @@ export default {
     },
     xAxis: {
       type: Object,
+      required: true,
+    },
+    yScale: {
+      type: Number,
       required: true,
     },
   },
@@ -62,7 +66,7 @@ export default {
 <style lang="scss" scoped>
 .chart-hover {
     &__line {
-        transition: .25s;
+        transition: .1s;
     }
 }
 </style>
