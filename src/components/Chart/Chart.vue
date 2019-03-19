@@ -21,6 +21,7 @@
                 :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
                 :y-scale="yScale"
+                :height="500"
             />
 
             <chart-hover
@@ -41,6 +42,21 @@
             :dates="dates"
         />
 
+        <chart-zoom>
+            <chart-line
+                v-for="( line, index ) in lines"
+                :key="`chartline-${ index }`"
+                :line="line"
+                :dates="dates"
+                :max="maxValue"
+                :hovered-pos="hoverPosition"
+                :is-hovered="isChartHovered"
+                :y-scale="yScale"
+                :height="75"
+                :line-width="2"
+            />
+        </chart-zoom>
+
         <chart-visibility-controller
             :lines="lines"
             @change-visibility="changeVisibility"
@@ -57,6 +73,7 @@ import ChartDates from './ChartDates/ChartDates.vue';
 import ChartVisibilityController from './ChartVisibilityController/ChartVisibilityController.vue';
 import ChartHover from './ChartHover/ChartHover.vue';
 import ChartTooltip from './ChartTooltip/ChartTooltip.vue';
+import ChartZoom from './ChartZoom/ChartZoom.vue';
 
 export default {
   props: {
@@ -73,6 +90,7 @@ export default {
     ChartVisibilityController,
     ChartHover,
     ChartTooltip,
+    ChartZoom,
   },
 
   data() {
@@ -115,7 +133,7 @@ export default {
           .columns;
     },
     yScale() {
-      return Math.floor(this.layoutWidth / this.xAxis.columns.length);
+      return this.layoutWidth / this.xAxis.columns.length;
     },
     tooltipData() {
       const dataObj = {

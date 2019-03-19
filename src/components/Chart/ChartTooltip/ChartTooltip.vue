@@ -58,6 +58,8 @@ export default {
 
     &__date {
         margin: 0 0 .5em;
+
+        font-weight: 500;
     }
 
     &__data-list {

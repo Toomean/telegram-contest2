@@ -5,7 +5,7 @@
                 :class="['line']"
                 :style="{
                     fill: 'none',
-                    strokeWidth: 3,
+                    strokeWidth: lineWidth,
                     stroke: line.color,
                 }"
                 :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
@@ -58,18 +58,25 @@ export default {
       type: Number,
       required: true,
     },
+    height: {
+      type: Number,
+      default: 500,
+    },
+    lineWidth: {
+      type: Number,
+      default: 3,
+    },
   },
 
   data() {
     return {
-      height: 500,
       circleToShow: [],
     };
   },
 
   computed: {
     heightRatio() {
-      return 500 / this.max * 0.9;
+      return this.height / this.max * 0.9;
     },
     points() {
       return this.dates
