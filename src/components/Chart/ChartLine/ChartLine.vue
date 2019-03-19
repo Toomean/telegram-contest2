@@ -77,21 +77,14 @@ export default {
     circlePoints() {
       return chunk(this.points, 2);
     },
-    // circleToShow() {
-    //   return this.circlePoints
-    //     .find(point => this.hoveredPos >= point[0] - 3 && this.hoveredPos <= point[0] + 3);
-    // },
   },
 
   watch: {
     hoveredPos(value) {
-      const posFound = this.circlePoints
-        .find(point => value >= point[0] - 3 && value <= point[0] + 3);
-
-      if (posFound) {
-        this.circleToShow = posFound;
-        this.$emit('pos-found', this.line.columns[posFound[0] / 10]);
-      }
+      this.circleToShow = [
+        this.circlePoints[value][0],
+        this.circlePoints[value][1],
+      ];
     },
   },
 };
@@ -106,7 +99,7 @@ export default {
 .circle {
   position: relative;
   z-index: 100;
-  transition: cy .25s, cx .25s;
+  transition: cy .15s, cx .15s;
 }
 
 .line-enter-active, .line-leave-active {

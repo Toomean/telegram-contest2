@@ -19,17 +19,14 @@
                 :max="maxValue"
                 :hoveredPos="hoverPosition"
                 :is-hovered="isChartHovered"
-
-                @pos-found="handlePosFound"
             />
 
             <chart-hover
-                v-if="isChartHovered"
                 :x="hoverPosition"
+                :xAxis="xAxis"
+                @x-hover="onXHover"
             />
         </svg>
-
-        {{ isChartHovered }}
 
         <chart-dates
             :dates="dates"
@@ -84,6 +81,10 @@ export default {
       return this.dataFormatted
         .filter(column => column.type === 'line');
     },
+    xAxis() {
+      return this.dataFormatted
+        .find(column => column.type === 'x');
+    },
     visibleLinesColumns() {
       return this.lines
         .filter(line => line.visible)
@@ -132,13 +133,13 @@ export default {
         this.isChartHovered = true;
       }
 
-      this.hoverPosition = $event.offsetX;
+      // this.hoverPosition = $event.offsetX;
+    },
+    onXHover(xPosition) {
+      this.hoverPosition = xPosition;
     },
     handleMouseleave() {
       this.isChartHovered = false;
-    },
-    handlePosFound(point) {
-      console.log(point);
     },
   },
 };
