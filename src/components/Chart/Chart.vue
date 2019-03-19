@@ -52,8 +52,10 @@
                 :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
                 :y-scale="yScale"
+
                 :height="75"
                 :line-width="2"
+                :show-circles="false"
             />
         </chart-zoom>
 

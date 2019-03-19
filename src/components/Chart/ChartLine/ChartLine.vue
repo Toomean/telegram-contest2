@@ -12,7 +12,7 @@
             ></path>
         </transition>
         <transition name="line">
-          <g v-if="line.visible && isHovered">
+          <g v-if="showCircles && line.visible && isHovered">
             <circle
               class="circle"
               :cx="circleToShow[0]"
@@ -65,6 +65,10 @@ export default {
     lineWidth: {
       type: Number,
       default: 3,
+    },
+    showCircles: {
+      type: Boolean,
+      default: true,
     },
   },
 
