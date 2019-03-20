@@ -28,6 +28,9 @@
             />
 
             <chart-hover
+                :style="{
+                  transform: 'translateX(' + chartPos +  '%)'
+                }"
                 :x="hoverPosition"
                 :x-axis="xAxis"
                 :y-scale="yScale"

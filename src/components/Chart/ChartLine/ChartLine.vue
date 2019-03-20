@@ -15,7 +15,7 @@
           <g v-if="showCircles && line.visible && isHovered">
             <circle
               class="circle"
-              :cx="circleToShow[0]"
+              :cx="circleToShow[0 * yScale]"
               :cy="circleToShow[1]"
               :style="{
                 fill: '#ffffff',
