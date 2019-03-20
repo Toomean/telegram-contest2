@@ -109,7 +109,7 @@ export default {
 .line {
     fill: none;
 
-    transition: d .25s;
+    // transition: d .25s;
 }
 .circle {
   position: relative;

@@ -15,8 +15,8 @@
             :h="96"
             :axis="'x'"
             :sticks="['ml','mr']"
-            v-on:resizing="resize"
-            v-on:dragging="resize"
+            v-on:resizing="onResize"
+            v-on:dragging="onResize"
             :parentLimitation="true"
         />
     </div>
@@ -36,13 +36,18 @@ export default {
     this.left = this.$refs.zoom.clientWidth - this.width;
   },
   methods: {
-    resize({
+    onResize({
       width, height, top, left,
     }) {
       this.width = width;
       this.height = height;
       this.top = top;
       this.left = left;
+
+      this.$emit('scale-change', {
+        scale: this.$refs.zoom.clientWidth / width,
+        pos: (left / this.width * 100),
+      });
     },
   },
 };
@@ -54,7 +59,7 @@ export default {
     height: 6em;
     margin: 1em 0 0;
 
-    overflow-x: hidden;
+    overflow: hidden;
 
     .vdr {
         &.active {
@@ -63,6 +68,8 @@ export default {
                 border: 1px solid rgba(135, 171, 196, .4);
                 left: 8px;
                 right: 8px;
+
+                box-sizing: border-box;
             }
         }
     }

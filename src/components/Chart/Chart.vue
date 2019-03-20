@@ -1,6 +1,6 @@
 <template>
     <div class="chart">
-      y scale: {{ yScale }}
+      y scale: {{ yScale }} {{ zoomScale }}
         <svg height="500" version="1.1" :width="layoutWidth" xmlns="http://www.w3.org/2000/svg"
             @mousemove="handleMousemove"
             @mouseleave="handleMouseleave"
@@ -13,6 +13,9 @@
             />
 
             <chart-line
+                :style="{
+                  transform: 'translateX(' + chartPos +  '%)'
+                }"
                 v-for="( line, index ) in lines"
                 :key="`chartline-${ index }`"
                 :line="line"
@@ -42,7 +45,9 @@
             :dates="dates"
         />
 
-        <chart-zoom>
+        <chart-zoom
+          @scale-change="onScaleChange"
+        >
             <chart-line
                 v-for="( line, index ) in lines"
                 :key="`chartline-${ index }`"
@@ -51,7 +56,7 @@
                 :max="maxValue"
                 :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
-                :y-scale="yScale"
+                :y-scale="10.714285714285714"
 
                 :height="75"
                 :line-width="2"
@@ -98,6 +103,10 @@ export default {
   data() {
     return {
       layoutWidth: 1200,
+
+      zoomScale: 1200 / 200,
+      chartPos: -495,
+
       dataFormatted: [],
 
       isChartHovered: false,
@@ -135,7 +144,7 @@ export default {
           .columns;
     },
     yScale() {
-      return this.layoutWidth / this.xAxis.columns.length;
+      return this.layoutWidth / this.xAxis.columns.length * this.zoomScale;
     },
     tooltipData() {
       const dataObj = {
@@ -193,6 +202,12 @@ export default {
     },
     handleMouseleave() {
       this.isChartHovered = false;
+    },
+    onScaleChange({ scale, pos }) {
+      console.log(pos);
+
+      this.zoomScale = scale;
+      this.chartPos = -pos;
     },
   },
 };
