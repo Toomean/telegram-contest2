@@ -1,6 +1,6 @@
 <template>
     <div class="chart">
-      y scale: {{ yScale }} {{ zoomScale }}
+      {{ yScale }}
         <svg height="500" version="1.1" :width="layoutWidth" xmlns="http://www.w3.org/2000/svg"
             @mousemove="handleMousemove"
             @mouseleave="handleMouseleave"
@@ -44,9 +44,15 @@
           :tooltip-data="tooltipData"
         />
 
-        <chart-dates
+        <svg version="1.1" height="40" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <chart-dates
+            :style="{
+                transform: 'translateX(' + chartPos +  '%)'
+              }"
             :dates="dates"
-        />
+            :y-scale="yScale"
+          />
+        </svg>
 
         <chart-zoom
           @scale-change="onScaleChange"

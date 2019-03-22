@@ -1,19 +1,22 @@
 <template>
-    <div class="chart-dates">
-        <div class="chart-dates__item"
-            v-for="(date, index) in datesShortens"
-            :key="`date-item-${index}`"
+    <g class="chart-dates">
+        <transition-group name="fade"
+          tag="g"
         >
-            {{ date }}
-        </div>
-    </div>
+            <text
+                v-for="(date, index) in dates"
+                v-show="isDateShown(index)"
+                :key="`chart-date-${ index }`"
+                class="chart-dates__text"
+                :x="index * yScale"
+                y="50%"
+            >{{ date | getMonthDay }}</text>
+        </transition-group>
+    </g>
 </template>
 
 <script>
-import { chunk } from 'lodash';
-
-// @@todo: remove moment from bundle
-import moment from 'moment';
+import { getMonthDay } from '@/filters/date';
 
 export default {
   props: {
@@ -21,33 +24,36 @@ export default {
       type: Array,
       required: true,
     },
+    yScale: {
+      type: Number,
+      required: true,
+    },
+  },
+
+  filters: {
+    getMonthDay,
   },
 
   computed: {
-    chunkSize() {
-      const recommendedSize = Math.round(this.dates.length / 6);
-
-      return recommendedSize < 6 ? 6 : recommendedSize;
-    },
-    datesShortens() {
-      const datesChunk = chunk(this.dates, this.chunkSize);
-
-      /* eslint-disable no-bitwise */
-      return datesChunk
-        .map(chunkItem => chunkItem[chunkItem.length / 2 | 0])
-        .map(middleDate => moment(middleDate).format('MMM DD'));
-      /* eslint-enable no-bitwise */
+    yScaleRounded() {
+      return Math.round(this.yScale);
     },
   },
 
   methods: {
-    chunk,
+    isDateShown(index) {
+      const delimeter = Math.floor(10 / this.yScaleRounded * 25);
+
+      return index % Math.max(1, delimeter) === 0;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .chart-dates {
+    overflow: hidden;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -57,5 +63,19 @@ export default {
 
         color: #aaa;
     }
+
+    &__text {
+        fill: #aaa;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        font-weight: 300;
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .25s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
 </style>
