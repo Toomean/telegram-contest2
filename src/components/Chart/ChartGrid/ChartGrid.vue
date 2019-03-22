@@ -1,6 +1,9 @@
 <template>
-    <g class="line-group">
-        <template v-for="(line, index) in lines">
+    <transition-group name="slide-fade" tag="g">
+        <g class="line-group"
+          v-for="(line, index) in lines"
+          :key="`${lineValue(line)}-${index}`"
+        >
             <line
                 :key="`line-${ index }`"
                 class="line-group__line"
@@ -13,8 +16,8 @@
                 x="0"
                 :y="`${ linePosition(line) - 1.5 }%`"
             >{{ lineValue(line) }}</text>
-        </template>
-    </g>
+        </g>
+    </transition-group>
 </template>
 
 <script>
@@ -60,5 +63,17 @@ export default {
         font-size: 12px;
         font-weight: 300;
     }
+}
+
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: opacity .15s, transform .15s;
+}
+.slide-fade-enter{
+  opacity: 0;
+  transform: translateY(0);
+}
+.slide-fade-leave-to{
+  opacity: 0;
+  transform: translateY(-10%);
 }
 </style>

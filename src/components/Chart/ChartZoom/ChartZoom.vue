@@ -11,6 +11,7 @@
         <vue-drag-resize
             :x="left"
             :isActive="true"
+            :preventActiveBehavior="true"
             :w="width"
             :h="96"
             :axis="'x'"
@@ -68,6 +69,8 @@ export default {
                 border: 1px solid rgba(135, 171, 196, .4);
                 left: 8px;
                 right: 8px;
+
+                width: auto;
 
                 box-sizing: border-box;
             }
