@@ -39,7 +39,7 @@
         </svg>
 
         <chart-tooltip
-          v-if="isChartHovered"
+          :chart-pos="chartPos"
           :pos-left="hoverPosition * yScale"
           :tooltip-data="tooltipData"
         />

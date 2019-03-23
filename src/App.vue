@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <chart
-      v-for="(chart, index) in [ ...chartData[0] ]"
+      v-for="(chart, index) in [ ...chartData ]"
       :key="index"
       :chartData="chart"
     />

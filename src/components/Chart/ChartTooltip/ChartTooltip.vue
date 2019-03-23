@@ -2,25 +2,28 @@
     <div class="chart-tooltip"
         :style="{
             left: posLeft + 'px',
+            transform: 'translateX(' + 1200 * chartPos / 100 + 'px)',
         }"
     >
-        <div class="chart-tooltip__date">{{ tooltipData.date }}</div>
-        <ul class="chart-tooltip__data-list">
-            <li class="chart-tooltip__data-item"
-                v-for="(item, index) in tooltipData.items"
-                :key="`tooltip-item-${ index }`"
-                :style="{
-                    color: item.color,
-                }"
-            >
-                <div class="chart-tooltip__data-item-value">
-                    {{ item.value }}
-                </div>
-                <div class="chart-tooltip__data-item-name">
-                    {{ item.name }}
-                </div>
-            </li>
-        </ul>
+        <div class="chart-tooltip__container">
+            <div class="chart-tooltip__date">{{ tooltipData.date }}</div>
+            <ul class="chart-tooltip__data-list">
+                <li class="chart-tooltip__data-item"
+                    v-for="(item, index) in tooltipData.items"
+                    :key="`tooltip-item-${ index }`"
+                    :style="{
+                        color: item.color,
+                    }"
+                >
+                    <div class="chart-tooltip__data-item-value">
+                        {{ item.value }}
+                    </div>
+                    <div class="chart-tooltip__data-item-name">
+                        {{ item.name }}
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -35,6 +38,10 @@ export default {
       type: Object,
       default: null,
     },
+    chartPos: {
+      type: Number,
+      required: true,
+    },
   },
 };
 </script>
@@ -48,18 +55,23 @@ export default {
     transform: translateX(-50%);
     transition: transform .1s;
 
-    padding: .4em .8em;
-    border-radius: .5em;
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
+    &__container {
+        transform: translateX(-50%);
 
-    background: #fff;
+        padding: .4em .8em;
+        border-radius: .5em;
+        box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
 
-    text-align: left;
+        background: #fff;
+
+        text-align: left;
+    }
 
     &__date {
         margin: 0 0 .5em;
 
         font-weight: 500;
+        white-space: nowrap;
     }
 
     &__data-list {

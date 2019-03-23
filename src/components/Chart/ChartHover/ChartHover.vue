@@ -52,9 +52,9 @@ export default {
     },
   },
   methods: {
-    onLineMouseOver(index) {
+    onLineMouseOver(index, x) {
       this.hoveredIndex = index;
-      this.$emit('x-hover', index);
+      this.$emit('x-hover', index, x);
     },
   },
 };
