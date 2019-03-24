@@ -1,5 +1,8 @@
 <template>
-    <div class="chart-zoom">
+    <div
+        class="chart-zoom"
+        :class="{ 'chart-zoom--night': activeColorMode === 'night' }"
+    >
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
             <slot />
         </svg>
@@ -45,6 +48,7 @@ export default {
     ...mapGetters([
       'applicationWidth',
       'zoomOptions',
+      'activeColorMode',
     ]),
   },
   mounted() {
@@ -100,6 +104,8 @@ export default {
         &.vdr-stick-mr {
 
             &::before {
+                transition: background-color .2s;
+
                 content: '';
                 position: absolute;
                 top: 0;
@@ -123,6 +129,17 @@ export default {
 
             &::before {
                 left: 100%;
+            }
+        }
+    }
+
+    &--night {
+        .vdr-stick {
+            &.vdr-stick-ml,
+            &.vdr-stick-mr {
+                &::before {
+                    background: rgba(245, 249, 251, .05);
+                }
             }
         }
     }

@@ -17,8 +17,8 @@
           class="circle"
           :cx="circleToShow[0 * yAxisScale]"
           :cy="circleToShow[1]"
+          :fill="circleFill"
           :style="{
-            fill: '#ffffff',
             stroke: lineData.color,
             strokeWidth: 3,
           }"
@@ -82,6 +82,7 @@ export default {
   computed: {
     ...mapGetters([
       'applicationHeightRatio',
+      'activeColorSchema',
     ]),
     heightRatio() {
       return this.height / this.yAxisMaxValue * this.applicationHeightRatio;
@@ -95,6 +96,10 @@ export default {
     },
     circlePoints() {
       return chunk(this.linePoints, 2);
+    },
+
+    circleFill() {
+      return this.activeColorSchema.appBackground;
     },
   },
 
@@ -116,9 +121,7 @@ export default {
     // transition: d .25s;
 }
 .circle {
-  position: relative;
-  z-index: 100;
-  transition: cy .15s, cx .15s;
+  transition: cy .15s, cx .15s, fill .2s;
 }
 
 .line-enter-active, .line-leave-active {

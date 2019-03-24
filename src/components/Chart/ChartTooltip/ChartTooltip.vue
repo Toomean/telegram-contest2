@@ -5,8 +5,12 @@
             transform: 'translateX(' + appWidth * chartPos / 100 + 'px)',
         }"
     >
-        <div class="chart-tooltip__container">
-            <div class="chart-tooltip__date">{{ tooltipData.date }}</div>
+        <div class="chart-tooltip__container"
+            :style="tooltipContainerStyle"
+        >
+            <div class="chart-tooltip__date"
+                :style="tooltipDateStyle"
+            >{{ tooltipData.date }}</div>
             <ul class="chart-tooltip__data-list">
                 <li class="chart-tooltip__data-item"
                     v-for="(item, index) in tooltipData.items"
@@ -28,6 +32,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     posLeft: {
@@ -47,6 +53,24 @@ export default {
       required: true,
     },
   },
+
+  computed: {
+    ...mapGetters([
+      'activeColorSchema',
+    ]),
+
+    tooltipDateStyle() {
+      return {
+        color: this.activeColorSchema.tooltipDateColor,
+      };
+    },
+    tooltipContainerStyle() {
+      return {
+        background: this.activeColorSchema.tooltipBackground,
+        boxShadow: this.activeColorSchema.tooltipBorderColor,
+      };
+    },
+  },
 };
 </script>
 
@@ -59,7 +83,11 @@ export default {
     transform: translateX(-50%);
     transition: transform .1s;
 
+    pointer-events: none;
+
     &__container {
+        transition: box-shadow .2s ease, background-color .2s ease;
+
         transform: translateX(-50%);
 
         padding: .4em .8em;
@@ -72,6 +100,8 @@ export default {
     }
 
     &__date {
+        transition: color .2s ease;
+
         margin: 0 0 .5em;
 
         font-weight: 500;

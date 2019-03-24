@@ -2,6 +2,7 @@
     <div class="visibility-controllers">
         <div class="visibility-controllers__item"
             :class="{ 'visibility-controllers__item--visible': line.visible }"
+            :style="controllerStyles"
             v-for="(line, index) in lines"
             :key="`line-controller-${ index }`"
             @click="changeVisibility(line)"
@@ -17,11 +18,27 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     lines: {
       type: Array,
       required: true,
+    },
+  },
+
+  computed: {
+    ...mapGetters([
+      'activeColorSchema',
+    ]),
+
+    controllerStyles() {
+      return {
+        color: this.activeColorSchema.controllerButtonColor,
+        borderColor: this.activeColorSchema.controllerBorderColor,
+        background: this.activeColorSchema.controllerBackgroundColor,
+      };
     },
   },
 
@@ -41,6 +58,8 @@ export default {
     margin: 2em 0;
 
     &__item {
+        transition: color .2s, border-color .2s, background-color .2s;
+
         display: flex;
         align-items: center;
 

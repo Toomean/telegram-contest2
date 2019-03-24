@@ -16,6 +16,14 @@
       />
 
       <g :style="{ transform: 'translateX(' + chartOffsetX +  '%)' }">
+        <chart-hover
+          v-if="isChartHovered"
+          :x="hoverPosition"
+          :x-axis="xAxisData"
+          :y-scale="yAxisScale"
+          @x-hover="onXHover"
+        />
+
         <chart-line
           v-for="( line, index ) in lines"
           :key="`chartline-${ index }`"
@@ -30,14 +38,6 @@
           :is-hovered="isChartHovered"
           :y-axis-scale="yAxisScale"
           :height="applicationHeight"
-        />
-
-        <chart-hover
-          v-if="isChartHovered"
-          :x="hoverPosition"
-          :x-axis="xAxisData"
-          :y-scale="yAxisScale"
-          @x-hover="onXHover"
         />
       </g>
     </svg>

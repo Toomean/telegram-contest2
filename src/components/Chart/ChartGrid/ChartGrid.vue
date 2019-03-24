@@ -7,12 +7,14 @@
             <line
                 :key="`line-${ index }`"
                 class="line-group__line"
+                :stroke="lineColor"
                 x1="0" x2="100%"
                 :y1="`${ linePosition(line) }%`" :y2="`${ linePosition(line) }%`"
             ></line>
             <text
                 :key="`text-${ index }`"
                 class="line-group__text"
+                :fill="labelColor"
                 x="0"
                 :y="`${ linePosition(line) - 1.5 }%`"
             >{{ lineValue(line) }}</text>
@@ -37,6 +39,7 @@ export default {
   computed: {
     ...mapGetters([
       'applicationHeightRatio',
+      'activeColorSchema',
     ]),
   },
   methods: {
@@ -49,6 +52,13 @@ export default {
     lineValue(line) {
       return Math.round(this.yAxisMaxValue * this.stepPercent(line - 1) / 100);
     },
+
+    lineColor() {
+      return this.activeColorSchema.gridLinesColor;
+    },
+    labelColor() {
+      return this.activeColorSchema.gridLabelsColor;
+    },
   },
 };
 </script>
@@ -56,10 +66,14 @@ export default {
 <style lang="scss" scoped>
 .line-group {
     &__line {
+        transition: stroke .2s;
+
         stroke: #ccc;
-        stroke-width: 0.25;
+        stroke-width: 0.15;
     }
     &__text {
+        transition: fill .2s;
+
         fill: #aaa;
         font-family: Helvetica, Arial, sans-serif;
         font-size: 12px;
