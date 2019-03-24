@@ -2,7 +2,7 @@
     <div class="chart-tooltip"
         :style="{
             left: posLeft + 'px',
-            transform: 'translateX(' + 1200 * chartPos / 100 + 'px)',
+            transform: 'translateX(' + appWidth * chartPos / 100 + 'px)',
         }"
     >
         <div class="chart-tooltip__container">
@@ -39,6 +39,10 @@ export default {
       default: null,
     },
     chartPos: {
+      type: Number,
+      required: true,
+    },
+    appWidth: {
       type: Number,
       required: true,
     },

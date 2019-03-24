@@ -1,7 +1,7 @@
 <template>
     <div class="chart">
-      {{ yScale }}
-        <svg height="500" version="1.1" :width="layoutWidth" xmlns="http://www.w3.org/2000/svg"
+      {{ applicationWidth }}
+        <svg height="500" version="1.1" :width="applicationWidth" xmlns="http://www.w3.org/2000/svg"
             @mousemove="handleMousemove"
             @mouseleave="handleMouseleave"
         >
@@ -39,9 +39,11 @@
         </svg>
 
         <chart-tooltip
+          v-if="isChartHovered"
           :chart-pos="chartPos"
           :pos-left="hoverPosition * yScale"
           :tooltip-data="tooltipData"
+          :app-width="applicationWidth"
         />
 
         <svg version="1.1" height="40" width="100%" xmlns="http://www.w3.org/2000/svg">
@@ -55,6 +57,10 @@
         </svg>
 
         <chart-zoom
+          :zoom-vdr-width="zoomVdrWidth"
+          :zoom-vdr-height="zoomVdrHeight"
+          :zoom-vdr-offset-left="zoomVdrOffsetLeft"
+
           @scale-change="onScaleChange"
         >
             <chart-line
@@ -83,6 +89,7 @@
 <script>
 import moment from 'moment';
 
+import { mapGetters } from 'vuex';
 import ChartGrid from './ChartGrid/ChartGrid.vue';
 import ChartLine from './ChartLine/ChartLine.vue';
 import ChartDates from './ChartDates/ChartDates.vue';
@@ -90,6 +97,7 @@ import ChartVisibilityController from './ChartVisibilityController/ChartVisibili
 import ChartHover from './ChartHover/ChartHover.vue';
 import ChartTooltip from './ChartTooltip/ChartTooltip.vue';
 import ChartZoom from './ChartZoom/ChartZoom.vue';
+
 
 export default {
   props: {
@@ -111,9 +119,9 @@ export default {
 
   data() {
     return {
-      layoutWidth: 1200,
+      zoomVdrWidth: 200,
+      zoomVdrHeight: 96,
 
-      zoomScale: 1200 / 200,
       chartPos: -495,
 
       dataFormatted: [],
@@ -124,8 +132,20 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'applicationWidth',
+    ]),
+
+    zoomScale() {
+      return this.applicationWidth / this.zoomVdrWidth;
+    },
+    zoomVdrOffsetLeft() {
+      return this.applicationWidth - this.zoomVdrWidth;
+    },
+
+
     maxValue() {
-      return Math.round(
+      return Math.ceil(
         Math.max(...this.visibleLinesColumns.flat()) / 100,
       ) * 100;
     },
@@ -153,7 +173,7 @@ export default {
           .columns;
     },
     yScale() {
-      return this.layoutWidth / this.xAxis.columns.length * this.zoomScale;
+      return this.applicationWidth / this.xAxis.columns.length * this.zoomScale;
     },
     tooltipData() {
       const dataObj = {
@@ -212,11 +232,9 @@ export default {
     handleMouseleave() {
       this.isChartHovered = false;
     },
-    onScaleChange({ scale, pos }) {
-      console.log(pos);
-
-      this.zoomScale = scale;
-      this.chartPos = -pos;
+    onScaleChange({ width, left }) {
+      this.zoomVdrWidth = width;
+      this.chartPos = -(left / width * 100);
     },
   },
 };
@@ -228,5 +246,9 @@ export default {
 
     display: inline-flex;
     flex-direction: column;
+
+    &:not(:first-child) {
+      margin: 4em 0 0;
+    }
 }
 </style>

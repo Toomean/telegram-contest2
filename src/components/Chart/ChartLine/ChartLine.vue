@@ -1,32 +1,32 @@
 <template>
-    <g>
-        <transition name="line">
-            <path v-if="line.visible"
-                :class="['line']"
-                :style="{
-                    fill: 'none',
-                    strokeWidth: lineWidth,
-                    stroke: line.color,
-                }"
-                :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
-            ></path>
-        </transition>
-        <transition name="line">
-          <g v-if="showCircles && line.visible && isHovered">
-            <circle
-              class="circle"
-              :cx="circleToShow[0 * yScale]"
-              :cy="circleToShow[1]"
-              :style="{
-                fill: '#ffffff',
-                stroke: line.color,
-                strokeWidth: 3,
-              }"
-              r="5"
-            ></circle>
-          </g>
-        </transition>
-    </g>
+  <g>
+    <transition name="line">
+      <path v-if="line.visible"
+        :class="['line']"
+        :style="{
+            fill: 'none',
+            strokeWidth: lineWidth,
+            stroke: line.color,
+        }"
+        :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
+      />
+    </transition>
+    <transition name="line">
+      <g v-if="showCircles && line.visible && isHovered">
+        <circle
+          class="circle"
+          :cx="circleToShow[0 * yScale]"
+          :cy="circleToShow[1]"
+          :style="{
+            fill: '#ffffff',
+            stroke: line.color,
+            strokeWidth: 3,
+          }"
+          r="5"
+        />
+      </g>
+    </transition>
+  </g>
 </template>
 
 <script>

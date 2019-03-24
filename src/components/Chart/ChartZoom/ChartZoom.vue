@@ -1,54 +1,62 @@
 <template>
-    <div class="chart-zoom"
-        ref="zoom"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg"
-            width="100%"
-            height="100%"
-        >
+    <div class="chart-zoom">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
             <slot />
         </svg>
         <vue-drag-resize
+            :isActive="zoomOptions.isActive"
+            :preventActiveBehavior="zoomOptions.preventActiveBehavior"
+            :parentLimitation="zoomOptions.parentLimitation"
+            :axis="zoomOptions.axis"
+            :sticks="zoomOptions.sticks"
+
+            :parentW="applicationWidth"
             :x="left"
-            :isActive="true"
-            :preventActiveBehavior="true"
             :w="width"
-            :h="96"
-            :axis="'x'"
-            :sticks="['ml','mr']"
+            :h="zoomVdrHeight"
+
             v-on:resizing="onResize"
             v-on:dragging="onResize"
-            :parentLimitation="true"
         />
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
+  props: {
+    zoomVdrWidth: {
+      type: Number,
+      required: true,
+    },
+    zoomVdrHeight: {
+      type: Number,
+      required: true,
+    },
+    zoomVdrOffsetLeft: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
-      width: 200,
-      height: 0,
-      top: 0,
-      left: 0,
+      width: this.zoomVdrWidth,
+      left: this.zoomVdrOffsetLeft,
     };
   },
-  mounted() {
-    this.left = this.$refs.zoom.clientWidth - this.width;
+  computed: {
+    ...mapGetters([
+      'applicationWidth',
+      'zoomOptions',
+    ]),
   },
   methods: {
-    onResize({
-      width, height, top, left,
-    }) {
+    onResize({ width, left }) {
       this.width = width;
-      this.height = height;
-      this.top = top;
       this.left = left;
 
-      this.$emit('scale-change', {
-        scale: this.$refs.zoom.clientWidth / width,
-        pos: (left / this.width * 100),
-      });
+      this.$emit('scale-change', { width, left });
     },
   },
 };
