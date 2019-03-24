@@ -1,5 +1,9 @@
 <template>
-    <transition-group name="slide-fade" tag="g">
+    <transition-group
+      :name="transitionName" tag="g"
+      @beforeEnter="onBeforeEnter"
+      mode="in-out"
+    >
         <g class="line-group"
           v-for="(line, index) in yAxisLinesCount"
           :key="`${lineValue(line)}-${index}`"
@@ -36,11 +40,22 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      maxValueGrown: false,
+      transitionName: 'slide-fade',
+    };
+  },
   computed: {
     ...mapGetters([
       'applicationHeightRatio',
       'activeColorSchema',
     ]),
+  },
+  watch: {
+    yAxisMaxValue(newValue, oldValue) {
+      this.maxValueGrown = newValue > oldValue;
+    },
   },
   methods: {
     stepPercent(line) {
@@ -59,6 +74,10 @@ export default {
     labelColor() {
       return this.activeColorSchema.gridLabelsColor;
     },
+
+    onBeforeEnter() {
+      this.transitionName = this.maxValueGrown ? 'slide-fade' : 'slide-fade-out';
+    },
   },
 };
 </script>
@@ -69,7 +88,7 @@ export default {
         transition: stroke .2s;
 
         stroke: #ccc;
-        stroke-width: 0.15;
+        stroke-width: 0.35;
     }
     &__text {
         transition: fill .2s;
@@ -81,15 +100,25 @@ export default {
     }
 }
 
-.slide-fade-enter-active, .slide-fade-leave-active {
-  transition: opacity .15s, transform .15s;
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: opacity .2s ease, transform .2s ease;
 }
-.slide-fade-enter{
+.slide-fade-enter,
+.slide-fade-leave-to
+{
   opacity: 0;
-  transform: translateY(0);
+  transform: translateY(18%);
 }
-.slide-fade-leave-to{
+
+.slide-fade-out-enter-active,
+.slide-fade-out-leave-active {
+  transition: opacity .2s ease, transform .2s ease;
+}
+.slide-fade-out-enter,
+.slide-fade-out-leave-to
+{
   opacity: 0;
-  transform: translateY(-10%);
+  transform: translateY(-18%);
 }
 </style>
