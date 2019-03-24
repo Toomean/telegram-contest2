@@ -2,6 +2,7 @@
     <g class="chart-dates">
         <transition-group name="fade"
           tag="g"
+          mode="in-out"
         >
             <text
                 v-for="(date, index) in dates"
@@ -73,9 +74,10 @@ export default {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .25s;
+  transition: opacity .25s, transform .2s;
 }
 .fade-enter, .fade-leave-to{
   opacity: 0;
+  transform: translateX(-5%)
 }
 </style>
