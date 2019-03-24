@@ -4,9 +4,10 @@
             left: posLeft + 'px',
             transform: 'translateX(' + appWidth * chartPos / 100 + 'px)',
         }"
+        ref="tooltip"
     >
         <div class="chart-tooltip__container"
-            :style="tooltipContainerStyle"
+            :style="{ ...tooltipContainerStyle, ...tooltipStyle }"
         >
             <div class="chart-tooltip__date"
                 :style="tooltipDateStyle"
@@ -53,12 +54,33 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      tooltipleftPosition: 0,
+    };
+  },
+
+  watch: {
+    posLeft() {
+      this.setTooltipLeft();
+    },
+  },
+
+  mounted() {
+    this.setTooltipLeft();
+  },
 
   computed: {
     ...mapGetters([
       'activeColorSchema',
+      'applicationWidth',
     ]),
 
+    tooltipStyle() {
+      return {
+        left: this.tooltipleftPosition,
+      };
+    },
     tooltipDateStyle() {
       return {
         color: this.activeColorSchema.tooltipDateColor,
@@ -69,6 +91,24 @@ export default {
         background: this.activeColorSchema.tooltipBackground,
         boxShadow: this.activeColorSchema.tooltipBoxShadow,
       };
+    },
+  },
+
+  methods: {
+    setTooltipLeft() {
+      const bodyWidth = document.body.clientWidth;
+      const { applicationWidth } = this;
+      const tooltipOffset = this.$refs.tooltip.getBoundingClientRect().left;
+      const tooltipWidth = this.$refs.tooltip.clientWidth;
+      const tooltipYPosition = tooltipOffset - tooltipWidth / 2 - (bodyWidth - applicationWidth) / 2;
+
+      if (tooltipYPosition < tooltipWidth) {
+        this.tooltipleftPosition = '50%';
+      } else if (tooltipYPosition + tooltipWidth > this.applicationWidth - tooltipWidth) {
+        this.tooltipleftPosition = '-50%';
+      } else {
+        this.tooltipleftPosition = 0;
+      }
     },
   },
 };
@@ -86,9 +126,11 @@ export default {
     pointer-events: none;
 
     &__container {
-        transition: box-shadow .2s ease, background-color .2s ease;
+        transition: box-shadow .2s ease, background-color .2s ease, left .1s ease;
 
         transform: translateX(-50%);
+
+        position: relative;
 
         padding: .4em .8em;
         border-radius: .5em;
