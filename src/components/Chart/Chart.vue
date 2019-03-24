@@ -1,97 +1,92 @@
 <template>
-    <div class="chart">
-        <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            :width="applicationWidth"
-            :height="applicationHeight"
-            @mousemove="handleMousemove"
-            @mouseleave="handleMouseleave"
-        >
-            <desc>Created for Telegram contest</desc>
+  <div class="chart">
+    <svg
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      :width="applicationWidth"
+      :height="applicationHeight"
+      @mousemove="handleMousemove"
+      @mouseleave="handleMouseleave"
+    >
+      <desc>Created for Telegram contest</desc>
 
-            <chart-grid
-                :y-axis-max-value="yAxisMaxValue"
-                :y-axis-lines-count="yAxisLinesCount"
-            />
+      <chart-grid
+        :y-axis-max-value="yAxisMaxValue"
+        :y-axis-lines-count="yAxisLinesCount"
+      />
 
-            <chart-line
-                :style="{
-                  transform: 'translateX(' + chartOffsetX +  '%)'
-                }"
-                v-for="( line, index ) in lines"
-                :key="`chartline-${ index }`"
+      <g :style="{ transform: 'translateX(' + chartOffsetX +  '%)' }">
+        <chart-line
+          v-for="( line, index ) in lines"
+          :key="`chartline-${ index }`"
 
-                :line-data="line"
+          :line-data="line"
 
-                :x-axis-data-colums="xAxisDataColums"
-                :y-axis-max-value="yAxisMaxValue"
+          :x-axis-data-colums="xAxisDataColums"
+          :y-axis-max-value="yAxisMaxValue"
 
-                :hovered-pos="hoverPosition"
+          :hovered-pos="hoverPosition"
 
-                :is-hovered="isChartHovered"
-                :y-axis-scale="yAxisScale"
-                :height="applicationHeight"
-            />
+          :is-hovered="isChartHovered"
+          :y-axis-scale="yAxisScale"
+          :height="applicationHeight"
+        />
 
-            <chart-hover
-                :style="{
-                  transform: 'translateX(' + chartOffsetX +  '%)'
-                }"
-                :x="hoverPosition"
-                :x-axis="xAxisData"
-                :y-scale="yAxisScale"
-                @x-hover="onXHover"
-            />
-        </svg>
-
-        <chart-tooltip
+        <chart-hover
           v-if="isChartHovered"
-          :chart-pos="chartOffsetX"
-          :pos-left="hoverPosition * yAxisScale"
-          :tooltip-data="tooltipData"
-          :app-width="applicationWidth"
+          :x="hoverPosition"
+          :x-axis="xAxisData"
+          :y-scale="yAxisScale"
+          @x-hover="onXHover"
         />
+      </g>
+    </svg>
 
-        <svg version="1.1" height="40" width="100%" xmlns="http://www.w3.org/2000/svg">
-          <chart-dates
-            :style="{
-                transform: 'translateX(' + chartOffsetX +  '%)'
-              }"
-            :dates="xAxisDataColums"
-            :y-scale="yAxisScale"
-          />
-        </svg>
+    <chart-tooltip
+      v-if="isChartHovered"
+      :chart-pos="chartOffsetX"
+      :pos-left="hoverPosition * yAxisScale"
+      :tooltip-data="tooltipData"
+      :app-width="applicationWidth"
+    />
 
-        <chart-zoom
-          :zoom-vdr-width="zoomVdrWidth"
-          :zoom-vdr-height="zoomVdrHeight"
+    <svg version="1.1" height="40" width="100%" xmlns="http://www.w3.org/2000/svg">
+      <chart-dates
+        :style="{ transform: 'translateX(' + chartOffsetX +  '%)' }"
+        :dates="xAxisDataColums"
+        :y-scale="yAxisScale"
+      />
+    </svg>
 
-          @scale-init="onScaleChange"
-          @scale-change="onScaleChange"
-        >
-            <chart-line
-                v-for="( line, index ) in lines"
-                :key="`chartline-${ index }`"
+    <chart-zoom
+      :zoom-vdr-width="zoomVdrWidth"
+      :zoom-vdr-height="zoomVdrHeight"
 
-                :line-data="line"
+      @scale-init="onScaleChange"
+      @scale-change="onScaleChange"
+    >
+      <chart-line
+        v-for="( line, index ) in lines"
+        :key="`chartline-${ index }`"
 
-                :x-axis-data-colums="xAxisDataColums"
-                :y-axis-max-value="yAxisMaxValue"
+        :line-data="line"
 
-                :y-axis-scale="yAxisScaleMin"
+        :x-axis-data-colums="xAxisDataColums"
+        :y-axis-max-value="yAxisMaxValue"
 
-                :height="chartPreviewOptions.height"
-                :line-width="chartPreviewOptions.lineWidth"
-                :show-circles="chartPreviewOptions.showCircles"
-            />
-        </chart-zoom>
+        :y-axis-scale="yAxisScaleMin"
 
-        <chart-visibility-controller
-            :lines="lines"
-            @change-visibility="changeVisibility"
-        />
-    </div>
+        :height="chartPreviewOptions.height"
+        :line-width="chartPreviewOptions.lineWidth"
+        :show-circles="chartPreviewOptions.showCircles"
+      />
+    </chart-zoom>
+
+    <chart-visibility-controller
+      :lines="lines"
+      @change-visibility="changeVisibility"
+    />
+  </div>
 </template>
 
 <script>
