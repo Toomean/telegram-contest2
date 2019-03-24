@@ -18,11 +18,11 @@
                 v-for="( line, index ) in lines"
                 :key="`chartline-${ index }`"
                 :line="line"
-                :dates="dates"
+                :dates="xAxisDataColums"
                 :max="yAxisMaxValue"
                 :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
-                :y-scale="yScale"
+                :y-scale="yAxisScale"
                 :height="500"
             />
 
@@ -31,8 +31,8 @@
                   transform: 'translateX(' + chartOffsetX +  '%)'
                 }"
                 :x="hoverPosition"
-                :x-axis="xAxis"
-                :y-scale="yScale"
+                :x-axis="xAxisData"
+                :y-scale="yAxisScale"
                 @x-hover="onXHover"
             />
         </svg>
@@ -40,7 +40,7 @@
         <chart-tooltip
           v-if="isChartHovered"
           :chart-pos="chartOffsetX"
-          :pos-left="hoverPosition * yScale"
+          :pos-left="hoverPosition * yAxisScale"
           :tooltip-data="tooltipData"
           :app-width="applicationWidth"
         />
@@ -50,8 +50,8 @@
             :style="{
                 transform: 'translateX(' + chartOffsetX +  '%)'
               }"
-            :dates="dates"
-            :y-scale="yScale"
+            :dates="xAxisDataColums"
+            :y-scale="yAxisScale"
           />
         </svg>
 
@@ -66,7 +66,7 @@
                 v-for="( line, index ) in lines"
                 :key="`chartline-${ index }`"
                 :line="line"
-                :dates="dates"
+                :dates="xAxisDataColums"
                 :max="yAxisMaxValue"
                 :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
@@ -86,8 +86,6 @@
 </template>
 
 <script>
-import moment from 'moment';
-
 import { mapGetters } from 'vuex';
 import ChartGrid from './ChartGrid/ChartGrid.vue';
 import ChartLine from './ChartLine/ChartLine.vue';
@@ -97,6 +95,7 @@ import ChartHover from './ChartHover/ChartHover.vue';
 import ChartTooltip from './ChartTooltip/ChartTooltip.vue';
 import ChartZoom from './ChartZoom/ChartZoom.vue';
 
+import { getWeekdayMonthDay } from '@/filters/date';
 
 export default {
   props: {
@@ -165,24 +164,22 @@ export default {
         Math.max(...this.columnsOfVisibleLines.flat()) / 100,
       ) * 100;
     },
+    yAxisScale() {
+      return this.applicationWidth / this.xAxisDataColums.length * this.zoomScale;
+    },
 
-    xAxis() {
+    xAxisData() {
       return this.dataFormatted
         .find(column => column.type === 'x');
     },
-    dates() {
-      return this.dataFormatted
-        && this.dataFormatted
-          .find(column => column.type === 'x')
-          .columns;
+    xAxisDataColums() {
+      return this.xAxisData.columns;
     },
-    yScale() {
-      return this.applicationWidth / this.xAxis.columns.length * this.zoomScale;
-    },
+
     tooltipData() {
       const dataObj = {
         pos: this.hoverPosition,
-        date: moment(this.xAxis.columns[this.hoverPosition]).format('ddd, MMM DD'),
+        date: getWeekdayMonthDay(this.xAxisDataColums[this.hoverPosition]),
         items: this.linesVisible
           .map((line) => {
             const linePoints = line.columns[this.hoverPosition];
