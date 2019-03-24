@@ -11,7 +11,7 @@
         :d="`M${ linePoints.slice(0,2) }L${ linePoints.slice(2) }`"
       />
     </transition>
-    <transition name="line">
+    <transition name="circle-fade">
       <g v-if="showCircles && lineData.visible && isHovered">
         <circle
           class="circle"
@@ -121,7 +121,15 @@ export default {
     // transition: d .25s;
 }
 .circle {
-  transition: cy .15s, cx .15s, fill .2s;
+  transition: cy .1s ease-out, cx .1s ease-out, fill .2s;
+}
+
+.circle-fade-enter-active {
+  transition: opacity .25s, transform .25s;
+}
+.circle-fade-enter, .circle-fade-leave-to{
+  opacity: 0;
+  transform: translateY(-50%);
 }
 
 .line-enter-active, .line-leave-active {

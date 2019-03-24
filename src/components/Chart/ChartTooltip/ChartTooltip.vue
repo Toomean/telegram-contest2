@@ -67,7 +67,7 @@ export default {
   },
 
   mounted() {
-    this.setTooltipLeft();
+    this.$nextTick(this.setTooltipLeft);
   },
 
   computed: {

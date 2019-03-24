@@ -17,7 +17,7 @@
             y1="9%" y2="99%"
             :style="{
                 stroke: 'transparent',
-                strokeWidth: 9,
+                strokeWidth: yScale - 1,
             }"
             @mouseover="onLineMouseOver(index)"
         />

@@ -1,5 +1,6 @@
 <template>
   <div class="chart">
+    {{ yScale }}
     <svg
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -42,13 +43,15 @@
       </g>
     </svg>
 
-    <chart-tooltip
-      v-if="isChartHovered"
-      :chart-pos="chartOffsetX"
-      :pos-left="hoverPosition * yAxisScale"
-      :tooltip-data="tooltipData"
-      :app-width="applicationWidth"
-    />
+    <transition name="tooltip-fade">
+      <chart-tooltip
+        v-if="isChartHovered"
+        :chart-pos="chartOffsetX"
+        :pos-left="hoverPosition * yAxisScale"
+        :tooltip-data="tooltipData"
+        :app-width="applicationWidth"
+      />
+    </transition>
 
     <svg version="1.1" height="40" width="100%" xmlns="http://www.w3.org/2000/svg">
       <chart-dates
@@ -256,5 +259,16 @@ export default {
     &:not(:first-child) {
       margin: 4em 0 0;
     }
+}
+
+.tooltip-fade-enter-active {
+  transition: opacity .25s;
+}
+
+.tooltip-fade-leave-active {
+  transition: opacity .25s .25s;
+}
+.tooltip-fade-enter, .tooltip-fade-leave-to{
+  opacity: 0;
 }
 </style>
