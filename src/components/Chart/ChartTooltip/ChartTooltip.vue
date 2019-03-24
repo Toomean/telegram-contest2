@@ -100,7 +100,9 @@ export default {
       const { applicationWidth } = this;
       const tooltipOffset = this.$refs.tooltip.getBoundingClientRect().left;
       const tooltipWidth = this.$refs.tooltip.clientWidth;
-      const tooltipYPosition = tooltipOffset - tooltipWidth / 2 - (bodyWidth - applicationWidth) / 2;
+      const tooltipYPosition = tooltipOffset
+        - tooltipWidth / 2
+        - (bodyWidth - applicationWidth) / 2;
 
       if (tooltipYPosition < tooltipWidth) {
         this.tooltipleftPosition = '50%';
