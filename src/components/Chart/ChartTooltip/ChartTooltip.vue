@@ -67,7 +67,7 @@ export default {
     tooltipContainerStyle() {
       return {
         background: this.activeColorSchema.tooltipBackground,
-        boxShadow: this.activeColorSchema.tooltipBorderColor,
+        boxShadow: this.activeColorSchema.tooltipBoxShadow,
       };
     },
   },

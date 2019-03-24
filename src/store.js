@@ -48,7 +48,7 @@ export default new Vuex.Store({
         colorSchemaControllerBackground: '#ffffff',
 
         tooltipBackground: '#ffffff',
-        tooltipBorderColor: '0 0 1px 1px rgba(0, 0, 0, .1);',
+        tooltipBoxShadow: '0 0 1px 1px rgba(0, 0, 0, .1)',
         tooltipDateColor: '#222222',
       },
       night: {
@@ -64,7 +64,7 @@ export default new Vuex.Store({
         colorSchemaControllerBackground: '#242F3E',
 
         tooltipBackground: '#242F3E',
-        tooltipBorderColor: '0 0 1px 1px rgba(0, 0, 0, .2);',
+        tooltipBoxShadow: '0 0 1px 1px rgba(255, 255, 255, .1)',
         tooltipDateColor: '#ffffff',
       },
     },
