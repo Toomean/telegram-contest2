@@ -34,15 +34,11 @@ export default {
       type: Number,
       required: true,
     },
-    zoomVdrOffsetLeft: {
-      type: Number,
-      required: true,
-    },
   },
   data() {
     return {
       width: this.zoomVdrWidth,
-      left: this.zoomVdrOffsetLeft,
+      left: 0,
     };
   },
   computed: {
@@ -50,6 +46,12 @@ export default {
       'applicationWidth',
       'zoomOptions',
     ]),
+  },
+  mounted() {
+    this.left = this.applicationWidth - this.zoomVdrWidth;
+    const { left, width } = this;
+
+    this.$emit('scale-init', { width, left });
   },
   methods: {
     onResize({ width, left }) {

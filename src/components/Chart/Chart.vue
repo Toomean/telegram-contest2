@@ -1,6 +1,5 @@
 <template>
     <div class="chart">
-      {{ applicationWidth }}
         <svg height="500" version="1.1" :width="applicationWidth" xmlns="http://www.w3.org/2000/svg"
             @mousemove="handleMousemove"
             @mouseleave="handleMouseleave"
@@ -8,19 +7,19 @@
             <desc>Created for Telegram contest</desc>
 
             <chart-grid
-                :max="maxValue"
+                :max="yAxisMaxValue"
                 :lines="6"
             />
 
             <chart-line
                 :style="{
-                  transform: 'translateX(' + chartPos +  '%)'
+                  transform: 'translateX(' + chartOffsetX +  '%)'
                 }"
                 v-for="( line, index ) in lines"
                 :key="`chartline-${ index }`"
                 :line="line"
                 :dates="dates"
-                :max="maxValue"
+                :max="yAxisMaxValue"
                 :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
                 :y-scale="yScale"
@@ -29,7 +28,7 @@
 
             <chart-hover
                 :style="{
-                  transform: 'translateX(' + chartPos +  '%)'
+                  transform: 'translateX(' + chartOffsetX +  '%)'
                 }"
                 :x="hoverPosition"
                 :x-axis="xAxis"
@@ -40,7 +39,7 @@
 
         <chart-tooltip
           v-if="isChartHovered"
-          :chart-pos="chartPos"
+          :chart-pos="chartOffsetX"
           :pos-left="hoverPosition * yScale"
           :tooltip-data="tooltipData"
           :app-width="applicationWidth"
@@ -49,7 +48,7 @@
         <svg version="1.1" height="40" width="100%" xmlns="http://www.w3.org/2000/svg">
           <chart-dates
             :style="{
-                transform: 'translateX(' + chartPos +  '%)'
+                transform: 'translateX(' + chartOffsetX +  '%)'
               }"
             :dates="dates"
             :y-scale="yScale"
@@ -59,8 +58,8 @@
         <chart-zoom
           :zoom-vdr-width="zoomVdrWidth"
           :zoom-vdr-height="zoomVdrHeight"
-          :zoom-vdr-offset-left="zoomVdrOffsetLeft"
 
+          @scale-init="onScaleChange"
           @scale-change="onScaleChange"
         >
             <chart-line
@@ -68,7 +67,7 @@
                 :key="`chartline-${ index }`"
                 :line="line"
                 :dates="dates"
-                :max="maxValue"
+                :max="yAxisMaxValue"
                 :hovered-pos="hoverPosition"
                 :is-hovered="isChartHovered"
                 :y-scale="10.714285714285714"
@@ -121,8 +120,7 @@ export default {
     return {
       zoomVdrWidth: 200,
       zoomVdrHeight: 96,
-
-      chartPos: -495,
+      zoomVdrOffsetLeft: 0,
 
       dataFormatted: [],
 
@@ -139,32 +137,38 @@ export default {
     zoomScale() {
       return this.applicationWidth / this.zoomVdrWidth;
     },
-    zoomVdrOffsetLeft() {
-      return this.applicationWidth - this.zoomVdrWidth;
+    chartOffsetX: {
+      get() {
+        return -(this.zoomVdrOffsetLeft / this.zoomVdrWidth * 100);
+      },
+      set({ left, width }) {
+        this.zoomVdrOffsetLeft = left;
+        this.zoomVdrWidth = width;
+      },
     },
 
-
-    maxValue() {
-      return Math.ceil(
-        Math.max(...this.visibleLinesColumns.flat()) / 100,
-      ) * 100;
-    },
     lines() {
       return this.dataFormatted
-        .filter(column => column.type === 'line');
+        .filter(({ type }) => type === 'line');
     },
+    linesVisible() {
+      return this.lines
+        .filter(({ visible }) => visible);
+    },
+    columnsOfVisibleLines() {
+      return this.linesVisible
+        .map(line => line.columns);
+    },
+
+    yAxisMaxValue() {
+      return Math.ceil(
+        Math.max(...this.columnsOfVisibleLines.flat()) / 100,
+      ) * 100;
+    },
+
     xAxis() {
       return this.dataFormatted
         .find(column => column.type === 'x');
-    },
-    visibleLinesColumns() {
-      return this.lines
-        .filter(line => line.visible)
-        .map(line => line.columns);
-    },
-    linesVisible() {
-      return this.dataFormatted
-        .filter(item => item.type === 'line' && item.visible);
     },
     dates() {
       return this.dataFormatted
@@ -234,7 +238,7 @@ export default {
     },
     onScaleChange({ width, left }) {
       this.zoomVdrWidth = width;
-      this.chartPos = -(left / width * 100);
+      this.chartOffsetX = { left, width };
     },
   },
 };
