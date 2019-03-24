@@ -11,6 +11,8 @@ export default new Vuex.Store({
     applicationHeight: 500,
     applicationHeightRatio: 0.9,
 
+    yAxisLinesCount: 6,
+
     zoomOptions: {
       isActive: true,
       parentLimitation: true,
@@ -18,13 +20,23 @@ export default new Vuex.Store({
       axis: 'x',
       sticks: ['ml', 'mr'],
     },
+
+    chartPreviewOptions: {
+      height: 75,
+      lineWidth: 2,
+      showCircles: false,
+    },
   },
   getters: {
     applicationWidth: state => state.applicationWidth,
     applicationHeight: state => state.applicationHeight,
     applicationHeightRatio: state => state.applicationHeightRatio,
 
+    yAxisLinesCount: state => state.yAxisLinesCount,
+
     zoomOptions: state => state.zoomOptions,
+
+    chartPreviewOptions: state => state.chartPreviewOptions,
   },
   actions: {
     setApplicationWidth({ commit }, payload) {

@@ -1,7 +1,7 @@
 <template>
     <transition-group name="slide-fade" tag="g">
         <g class="line-group"
-          v-for="(line, index) in lines"
+          v-for="(line, index) in yAxisLinesCount"
           :key="`${lineValue(line)}-${index}`"
         >
             <line
@@ -21,31 +21,33 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
-    max: {
+    yAxisMaxValue: {
       type: Number,
       required: true,
     },
-    lines: {
+    yAxisLinesCount: {
       type: Number,
-      default: 6,
+      required: true,
     },
   },
-  data() {
-    return {
-      gridRatio: 0.9,
-    };
+  computed: {
+    ...mapGetters([
+      'applicationHeightRatio',
+    ]),
   },
   methods: {
     stepPercent(line) {
-      return 100 / (this.lines - 1) * line;
+      return 100 / (this.yAxisLinesCount - 1) * line;
     },
     linePosition(line) {
-      return 99 - this.stepPercent(line - 1) * this.gridRatio;
+      return 99 - this.stepPercent(line - 1) * this.applicationHeightRatio;
     },
     lineValue(line) {
-      return Math.round(this.max * this.stepPercent(line - 1) / 100);
+      return Math.round(this.yAxisMaxValue * this.stepPercent(line - 1) / 100);
     },
   },
 };

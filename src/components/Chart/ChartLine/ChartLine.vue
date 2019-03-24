@@ -1,25 +1,25 @@
 <template>
   <g>
     <transition name="line">
-      <path v-if="line.visible"
+      <path v-if="lineData.visible"
         :class="['line']"
         :style="{
             fill: 'none',
             strokeWidth: lineWidth,
-            stroke: line.color,
+            stroke: lineData.color,
         }"
-        :d="`M${ points.slice(0,2) }L${ points.slice(2) }`"
+        :d="`M${ linePoints.slice(0,2) }L${ linePoints.slice(2) }`"
       />
     </transition>
     <transition name="line">
-      <g v-if="showCircles && line.visible && isHovered">
+      <g v-if="showCircles && lineData.visible && isHovered">
         <circle
           class="circle"
-          :cx="circleToShow[0 * yScale]"
+          :cx="circleToShow[0 * yAxisScale]"
           :cy="circleToShow[1]"
           :style="{
             fill: '#ffffff',
-            stroke: line.color,
+            stroke: lineData.color,
             strokeWidth: 3,
           }"
           r="5"
@@ -31,18 +31,19 @@
 
 <script>
 import { chunk } from 'lodash';
+import { mapGetters } from 'vuex';
 
 export default {
   props: {
-    line: {
+    lineData: {
       type: Object,
       required: true,
     },
-    dates: {
+    xAxisDataColums: {
       type: Array,
       required: true,
     },
-    max: {
+    yAxisMaxValue: {
       type: Number,
       required: true,
     },
@@ -54,13 +55,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    yScale: {
+    yAxisScale: {
       type: Number,
       required: true,
     },
     height: {
       type: Number,
-      default: 500,
+      required: true,
     },
     lineWidth: {
       type: Number,
@@ -79,18 +80,21 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'applicationHeightRatio',
+    ]),
     heightRatio() {
-      return this.height / this.max * 0.9;
+      return this.height / this.yAxisMaxValue * this.applicationHeightRatio;
     },
-    points() {
-      return this.dates
+    linePoints() {
+      return this.xAxisDataColums
         .map((date, index) => (
-          [index * this.yScale, this.height - this.line.columns[index] * this.heightRatio]
+          [index * this.yAxisScale, this.height - this.lineData.columns[index] * this.heightRatio]
         ))
         .flat();
     },
     circlePoints() {
-      return chunk(this.points, 2);
+      return chunk(this.linePoints, 2);
     },
   },
 

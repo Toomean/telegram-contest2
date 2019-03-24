@@ -1,14 +1,18 @@
 <template>
     <div class="chart">
-        <svg height="500" version="1.1" :width="applicationWidth" xmlns="http://www.w3.org/2000/svg"
+        <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            :width="applicationWidth"
+            :height="applicationHeight"
             @mousemove="handleMousemove"
             @mouseleave="handleMouseleave"
         >
             <desc>Created for Telegram contest</desc>
 
             <chart-grid
-                :max="yAxisMaxValue"
-                :lines="6"
+                :y-axis-max-value="yAxisMaxValue"
+                :y-axis-lines-count="yAxisLinesCount"
             />
 
             <chart-line
@@ -17,13 +21,17 @@
                 }"
                 v-for="( line, index ) in lines"
                 :key="`chartline-${ index }`"
-                :line="line"
-                :dates="xAxisDataColums"
-                :max="yAxisMaxValue"
+
+                :line-data="line"
+
+                :x-axis-data-colums="xAxisDataColums"
+                :y-axis-max-value="yAxisMaxValue"
+
                 :hovered-pos="hoverPosition"
+
                 :is-hovered="isChartHovered"
-                :y-scale="yAxisScale"
-                :height="500"
+                :y-axis-scale="yAxisScale"
+                :height="applicationHeight"
             />
 
             <chart-hover
@@ -65,16 +73,17 @@
             <chart-line
                 v-for="( line, index ) in lines"
                 :key="`chartline-${ index }`"
-                :line="line"
-                :dates="xAxisDataColums"
-                :max="yAxisMaxValue"
-                :hovered-pos="hoverPosition"
-                :is-hovered="isChartHovered"
-                :y-scale="10.714285714285714"
 
-                :height="75"
-                :line-width="2"
-                :show-circles="false"
+                :line-data="line"
+
+                :x-axis-data-colums="xAxisDataColums"
+                :y-axis-max-value="yAxisMaxValue"
+
+                :y-axis-scale="yAxisScaleMin"
+
+                :height="chartPreviewOptions.height"
+                :line-width="chartPreviewOptions.lineWidth"
+                :show-circles="chartPreviewOptions.showCircles"
             />
         </chart-zoom>
 
@@ -132,6 +141,9 @@ export default {
   computed: {
     ...mapGetters([
       'applicationWidth',
+      'applicationHeight',
+      'yAxisLinesCount',
+      'chartPreviewOptions',
     ]),
 
     zoomScale() {
@@ -167,6 +179,9 @@ export default {
     },
     yAxisScale() {
       return this.applicationWidth / this.xAxisDataColums.length * this.zoomScale;
+    },
+    yAxisScaleMin() {
+      return this.applicationWidth / this.xAxisDataColums.length;
     },
 
     xAxisData() {
