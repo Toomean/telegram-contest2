@@ -87,6 +87,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+
 import ChartGrid from './ChartGrid/ChartGrid.vue';
 import ChartLine from './ChartLine/ChartLine.vue';
 import ChartDates from './ChartDates/ChartDates.vue';
@@ -177,22 +178,16 @@ export default {
     },
 
     tooltipData() {
-      const dataObj = {
+      return {
         pos: this.hoverPosition,
         date: getWeekdayMonthDay(this.xAxisDataColums[this.hoverPosition]),
         items: this.linesVisible
-          .map((line) => {
-            const linePoints = line.columns[this.hoverPosition];
-
-            return {
-              color: line.color,
-              name: line.name,
-              value: linePoints,
-            };
-          }),
+          .map(({ color, name, columns }) => ({
+            color,
+            name,
+            value: columns[this.hoverPosition],
+          })),
       };
-
-      return dataObj;
     },
   },
 
