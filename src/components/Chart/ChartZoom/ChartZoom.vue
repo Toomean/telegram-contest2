@@ -51,11 +51,15 @@ export default {
       'activeColorMode',
     ]),
   },
+  watch: {
+    applicationWidth(value) {
+      this.initZoom(value);
+    },
+  },
   mounted() {
-    this.left = this.applicationWidth - this.zoomVdrWidth;
-    const { left, width } = this;
-
-    this.$emit('scale-init', { width, left });
+    this.$nextTick(() => {
+      this.initZoom(this.applicationWidth);
+    });
   },
   methods: {
     onResize({ width, left }) {
@@ -63,6 +67,13 @@ export default {
       this.left = left;
 
       this.$emit('scale-change', { width, left });
+    },
+    initZoom(value) {
+      this.left = value - this.zoomVdrWidth;
+
+      const { left, width } = this;
+
+      this.$emit('scale-init', { width, left });
     },
   },
 };

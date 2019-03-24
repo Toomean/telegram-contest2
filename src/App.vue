@@ -52,7 +52,9 @@ export default {
     this.setAppWidth();
 
     this.$nextTick(() => {
-      window.addEventListener('resize', this.setAppWidth);
+      window.addEventListener('resize', () => {
+        this.setAppWidth();
+      });
     });
   },
   methods: {
