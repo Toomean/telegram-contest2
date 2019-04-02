@@ -18,6 +18,7 @@
 
 <script>
 import { getMonthDay } from '@/filters/date';
+import { mapGetters } from 'vuex';
 
 export default {
   props: {
@@ -36,14 +37,20 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'applicationWidth',
+    ]),
     yScaleRounded() {
       return Math.round(this.yScale);
+    },
+    dateScaleMultiplier() {
+      return this.applicationWidth < 768 ? 15 : 25;
     },
   },
 
   methods: {
     isDateShown(index) {
-      const delimeter = Math.floor(10 / this.yScaleRounded * 25);
+      const delimeter = Math.floor(10 / this.yScaleRounded * this.dateScaleMultiplier);
 
       return index % Math.max(1, delimeter) === 0;
     },

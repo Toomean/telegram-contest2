@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 // Mutations
 const SET_APPLICATION_WIDTH = 'SET_APPLICATION_WIDTH';
+const SET_APPLICATION_HEIGHT = 'SET_APPLICATION_HEIGHT';
 const TOGGLE_COLOR_MODE = 'TOGGLE_COLOR_MODE';
 
 // Common
@@ -87,6 +88,9 @@ export default new Vuex.Store({
     setApplicationWidth({ commit }, payload) {
       commit(SET_APPLICATION_WIDTH, payload);
     },
+    setApplicationHeight({ commit }, payload) {
+      commit(SET_APPLICATION_HEIGHT, payload);
+    },
     toggleMode({ commit }) {
       commit(TOGGLE_COLOR_MODE);
     },
@@ -95,6 +99,9 @@ export default new Vuex.Store({
   mutations: {
     [SET_APPLICATION_WIDTH](state, { applicationWidth }) {
       state.applicationWidth = applicationWidth;
+    },
+    [SET_APPLICATION_HEIGHT](state, { applicationHeight }) {
+      state.applicationHeight = applicationHeight;
     },
     [TOGGLE_COLOR_MODE](state) {
       state.activeColorMode = state.activeColorMode === DAY_MODE_NAME

@@ -41,6 +41,7 @@ export default {
   computed: {
     ...mapGetters([
       'activeColorSchema',
+      'applicationHeight',
     ]),
     appStyles() {
       return {
@@ -60,11 +61,19 @@ export default {
   methods: {
     ...mapActions([
       'setApplicationWidth',
+      'setApplicationHeight',
     ]),
 
     setAppWidth() {
       const applicationWidth = this.$refs.app.clientWidth;
       this.setApplicationWidth({ applicationWidth });
+
+      if (applicationWidth < 768 && this.applicationHeight === 300) {
+        this.setApplicationHeight({ applicationHeight: 200 });
+      }
+      if (applicationWidth >= 768 && this.applicationHeight === 200) {
+        this.setApplicationHeight({ applicationHeight: 300 });
+      }
     },
   },
 };
